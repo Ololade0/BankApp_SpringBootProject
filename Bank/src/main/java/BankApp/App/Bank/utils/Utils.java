@@ -19,6 +19,7 @@ public class Utils {
     private static final int BUSINESS_ACCOUNT = 103;
     private static final int STUDENT_ACCOUNT = 104;
     private static final int FIXED_ACCOUNT = 105;
+    private static final int ZECA_ACCOUNT = 105;
 
     public String generateAccountNumber(AccountType accountType) {
         String prefix = String.valueOf(getPrefixForAccountType(accountType));
