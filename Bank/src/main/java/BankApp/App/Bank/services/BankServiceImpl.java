@@ -4,10 +4,7 @@ import BankApp.App.Bank.dto.request.*;
 import BankApp.App.Bank.dto.response.*;
 import BankApp.App.Bank.exception.BankDoesNotExistException;
 import BankApp.App.Bank.exception.BankNameAlreadyExistException;
-import BankApp.App.Bank.model.Account;
-import BankApp.App.Bank.model.Bank;
-import BankApp.App.Bank.model.Customer;
-import BankApp.App.Bank.model.Role;
+import BankApp.App.Bank.model.*;
 import BankApp.App.Bank.model.enums.RoleType;
 import BankApp.App.Bank.repository.BankRepository;
 import BankApp.App.Bank.repository.RoleRepository;
@@ -20,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -107,6 +106,25 @@ public class BankServiceImpl implements BankServices{
     }
 
 
+    @Override
+    public OpenAccountResponse openAccount(OpenAccountRequest openAccountRequest, String bankId, String customerId) throws UnirestException {
+        Account newAccount = accountService.openAccount(openAccountRequest);
+        Bank foundBank = bankRepository.findBankById(bankId);
+        Customer foundCustomer = customerService.findCustomerById(customerId);
+        if (foundBank!= null) {
+            foundCustomer.getAccounts().add(newAccount);
+            bankRepository.save(foundBank);
+        }
+
+       return OpenAccountResponse .builder()
+                .message("Account successfully registered")
+                .accountType(newAccount.getAccountType())
+                .accountName(newAccount.getAccountName())
+                .accountNumber(newAccount.getAccountNumber())
+                .accountId(newAccount.getAccountId())
+                .build();
+    }
+
 
     @Override
     public CustomerRegisterResponse saveCustomer(CustomerRegisterRequest customerRegisterRequest) throws UnirestException {
@@ -118,7 +136,6 @@ public class BankServiceImpl implements BankServices{
             foundBank.getCustomers().add(savedCustomer);
             bankRepository.save(foundBank);
         }
-
         CustomerRegisterResponse customerRegisterResponse = new CustomerRegisterResponse();
         customerRegisterResponse.setMessage("Customer successfully registered");
         customerRegisterResponse.setCustomerId(savedCustomer.getCustomerId());
@@ -189,24 +206,7 @@ public class BankServiceImpl implements BankServices{
     }
 
 
-    @Override
-    public OpenAccountResponse openAccount(OpenAccountRequest openAccountRequest, String bankId, String customerId) throws UnirestException {
-        Account newAccount = accountService.openAccount(openAccountRequest);
-        Bank foundBank = bankRepository.findBankById(bankId);
-        Customer foundCustomer = customerService.findCustomerById(customerId);
-        if (foundBank!= null) {
-            foundCustomer.getAccounts().add(newAccount);
-            bankRepository.save(foundBank);
-        }
 
-        return OpenAccountResponse.builder()
-                .message("Account successfully registered")
-                .accountType(newAccount.getAccountType())
-                .accountName(newAccount.getAccountName())
-                .accountNumber(newAccount.getAccountNumber())
-                .accountId(newAccount.getAccountId())
-                .build();
-    }
 
 
 
@@ -306,6 +306,8 @@ public class BankServiceImpl implements BankServices{
        }
     }
 
+
+
     @Override
     public Optional<Bank> findBankByEmail(String email) {
         if(bankRepository.findBankByEmail(email).isPresent()){
@@ -327,7 +329,10 @@ public class BankServiceImpl implements BankServices{
         throw new BankDoesNotExistException("Bank cannot be found");
     }
 
-
+    @Override
+    public List<TransactionsHistory> generateCustomerStatementOfAccount(String bankId, String accountNumber, LocalDate startDate, LocalDate endDate) {
+        return accountService.generateStatmentOfAccount(accountNumber, startDate, endDate);
+    }
 
 
 }

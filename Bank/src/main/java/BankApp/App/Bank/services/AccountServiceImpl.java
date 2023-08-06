@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -266,16 +268,46 @@ public class AccountServiceImpl implements AccountService {
 
 
 
+    @Override
+    public List<TransactionsHistory> generateStatmentOfAccount(String accountNumber, LocalDate startDate, LocalDate endDate) {
+        Optional<Account> foundAccount = accountRepository.findAccountByAccountNumber(accountNumber);
+        if(foundAccount.isPresent()){
+            return transactionServices.retrieveAllTransactions(startDate,endDate);
+
+        }
+        else {
+            throw new AccountCannotBeFound("Accoount cannot be found");
+        }
+
+    }
+
+
+//    @Override
+//        public String generateStatementContent(String accountId, LocalDate startDate, LocalDate endDate) {
+//            Account account = accountRepository.findAccountByAccountId(accountId);
+//            List<TransactionsHistory> transactions = transactionServices.findByAccountIdAndTransactionDateBetween(accountId, startDate, endDate);
+//            StringBuilder statementContent = new StringBuilder();
+//            statementContent.append("Account Number: ").append(account.getAccountNumber()).append("\n");
+//            statementContent.append("Statement Date: ").append(LocalDate.now()).append("\n");
+//            statementContent.append("\nTransaction History:\n");
+//            for (TransactionsHistory transaction : transactions) {
+//                transactionServices.generateStatementOfAccount(transaction);
+////                statementContent.append(transaction.getTransactionDate()).append(transaction.getTransactionDate());
+////                statementContent.append(transaction.getDescription()).append(" - ");
+////                statementContent.append(transaction.getTransactionAmount()).append("\n");
+//                return transaction.toString();
+//            }
+//
+//            return statementContent.toString();
+//
+
+
+
+        }
 
 
 
 
-
-
-
-
-
-}
 
 
 

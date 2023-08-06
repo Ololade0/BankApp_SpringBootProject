@@ -7,9 +7,12 @@ import BankApp.App.Bank.model.Bank;
 
 
 import BankApp.App.Bank.model.Customer;
+import BankApp.App.Bank.model.TransactionsHistory;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -61,6 +64,6 @@ public interface BankServices {
     String closeAllAccounts();
 
     String closeAccount(String bankId, String accountId);
-
+    List<TransactionsHistory> generateCustomerStatementOfAccount(String bankId, String accountNumber, LocalDate startDate, LocalDate endDate);
     Optional<Bank> findBankByEmail(String email);
 }

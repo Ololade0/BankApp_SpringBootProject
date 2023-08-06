@@ -1,13 +1,11 @@
 package BankApp.App.Bank.controller;
 
-import BankApp.App.Bank.dto.request.DepositFundRequest;
-import BankApp.App.Bank.dto.request.OpenAccountRequest;
-import BankApp.App.Bank.dto.request.TransferRequest;
-import BankApp.App.Bank.dto.request.WithdrawalFundRequest;
+import BankApp.App.Bank.dto.request.*;
 import BankApp.App.Bank.dto.response.DepositFundResponse;
 import BankApp.App.Bank.dto.response.TransferFundResponse;
 import BankApp.App.Bank.dto.response.WithdrawalFundResponse;
 import BankApp.App.Bank.model.Account;
+import BankApp.App.Bank.model.TransactionsHistory;
 import BankApp.App.Bank.services.AccountService;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -15,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,4 +74,11 @@ public class AccountController {
         TransferFundResponse transferFundResponse  = accountService.transferFunds(transferRequest);
         return new ResponseEntity<>(transferFundResponse, HttpStatus.CREATED);
     }
+
+
+//    @GetMapping("{accountId}/{startDate}/{endDate}/generateStatementAccount")
+//    public ResponseEntity<?> transferFunds(@PathVariable String accountId,@PathVariable LocalDate startDate, @PathVariable LocalDate endDate){
+//        String statementContent= accountService.generateStatementContent(accountId,startDate,endDate);
+//        return new ResponseEntity<>(statementContent, HttpStatus.CREATED);
+//    }
 }

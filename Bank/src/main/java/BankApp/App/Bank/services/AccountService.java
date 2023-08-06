@@ -6,10 +6,13 @@ import BankApp.App.Bank.dto.response.TransferFundResponse;
 import BankApp.App.Bank.dto.response.WithdrawalFundResponse;
 import BankApp.App.Bank.model.Account;
 
+import BankApp.App.Bank.model.TransactionsHistory;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 
 public interface AccountService {
@@ -41,7 +44,12 @@ public interface AccountService {
     DepositFundResponse depositFundsIntoAccounts(DepositFundRequest depositFundRequest);
 
     TransferFundResponse transferFunds(TransferRequest transfer);
+    List<TransactionsHistory> generateStatmentOfAccount(String accountNumber, LocalDate startDate, LocalDate endDate);
 
+//    List<TransactionsHistory> generateStatementContent(String accountId);
+//
+//    List<TransactionsHistory> retrieveAllTransactions(String accountId, LocalDate startDate, LocalDate endDate);
 
-
+//
+//    String generateStatementContent(String accountId, LocalDate startDate, LocalDate endDate);
 }

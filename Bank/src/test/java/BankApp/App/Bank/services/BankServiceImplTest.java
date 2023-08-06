@@ -7,6 +7,7 @@ import BankApp.App.Bank.exception.BankNameAlreadyExistException;
 import BankApp.App.Bank.model.Account;
 import BankApp.App.Bank.model.Bank;
 import BankApp.App.Bank.model.Customer;
+import BankApp.App.Bank.model.TransactionsHistory;
 import BankApp.App.Bank.model.enums.AccountType;
 import BankApp.App.Bank.model.enums.GenderType;
 import BankApp.App.Bank.utils.Utils;
@@ -21,10 +22,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 
@@ -303,6 +307,19 @@ class BankServiceImplTest {
         assertEquals(BigDecimal.valueOf(3000), depositFunds.getCurrentBalance());
         assertEquals("Funds successfully deposited", depositFunds.getMessage());
 
+    }
+
+    @Test
+    void generateCustomerAccountStatement () {
+        GenerateStatementAccountRequest generateStatementAccountRequest = GenerateStatementAccountRequest.builder()
+                .accountNumber(newAccount.getAccountNumber())
+                .bankId(savedBank.getBankId())
+                .startDate(LocalDate.of(2023,8,6))
+                .endDate(LocalDate.of(2023,8,6))
+                .build();
+        List<TransactionsHistory> allTransactions = bankService.generateCustomerStatementOfAccount(savedBank.getBankId(), generateStatementAccountRequest.getAccountNumber(), generateStatementAccountRequest.getStartDate(), generateStatementAccountRequest.getEndDate());
+        assertThat(allTransactions).isNotNull();
+        System.out.println(allTransactions);
     }
 
 

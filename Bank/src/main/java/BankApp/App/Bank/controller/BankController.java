@@ -5,15 +5,20 @@ import BankApp.App.Bank.dto.response.*;
 import BankApp.App.Bank.model.Account;
 import BankApp.App.Bank.model.Bank;
 import BankApp.App.Bank.model.Customer;
+import BankApp.App.Bank.model.TransactionsHistory;
 import BankApp.App.Bank.services.BankServices;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -148,5 +153,14 @@ public class BankController {
     }
 
 
+    @GetMapping("/{bankId}/{accountNumber}/generateStatementOfAccount")
+    public ResponseEntity<List<TransactionsHistory>> getTransactionHistory(@PathVariable String bankId, @PathVariable String accountNumber,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
 
-}
+        List<TransactionsHistory> transactionHistory = bankServices.generateCustomerStatementOfAccount(bankId,accountNumber, startDate, endDate);
+        return ResponseEntity.ok(transactionHistory);
+    }
+
+    }

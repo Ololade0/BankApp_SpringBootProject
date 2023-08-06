@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -36,7 +38,33 @@ public class TranservicesImpl implements TransactionServices {
     }
 
 
-   @Override
+    @Override
+    public TransactionsHistory generateStatementOfAccount(TransactionsHistory transactionsHistories) {
+        TransactionsHistory transactionsHistory = TransactionsHistory.builder()
+                .transactionId(generateTransactionId())
+                .accountNumber(transactionsHistories.getAccountNumber())
+                .transactionDate(transactionsHistories.getTransactionDate())
+                .transactionAmount(transactionsHistories.getTransactionAmount())
+                .transactionType(TransactionType.CREDIT)
+                .description("Deposit of "+ transactionsHistories.getTransactionAmount() + " was made into " + transactionsHistories.getAccountNumber())
+                .build();
+        transactionRepository.save(transactionsHistory);
+
+        return TransactionsHistory.builder()
+                .transactionId(generateTransactionId())
+                .accountNumber(transactionsHistories.getAccountNumber())
+                .transactionDate(LocalDateTime.now())
+                .transactionAmount(transactionsHistories.getTransactionAmount())
+                .transactionType(TransactionType.CREDIT)
+                .description("Deposit of "+ transactionsHistories.getTransactionAmount() + " was made into " + transactionsHistories.getAccountNumber())
+                .build();
+
+    }
+
+
+
+
+    @Override
     public TransactionsHistory createDepositTransaction(DepositFundRequest depositFundRequest) {
         TransactionsHistory transactionsHistory = TransactionsHistory.builder()
                 .transactionId(generateTransactionId())
@@ -85,7 +113,6 @@ public class TranservicesImpl implements TransactionServices {
                 .transactionType(TransactionType.DEBIT)
                 .description("Withdrawal of -"+ withdrawalFundRequest.getWithdrawalAmount() + " was made from " + withdrawalFundRequest.getAccountNumber())
                 .build();
-
     }
 
     @Override
@@ -118,8 +145,17 @@ public class TranservicesImpl implements TransactionServices {
         return foundTransaction.orElseThrow(() -> {
             throw new TransactionsHistoryCannotBeFound("transaction cannot be found");
         });
-
        }
+
+    @Override
+    public List<TransactionsHistory> retrieveAllTransactions(LocalDate startDate, LocalDate endDate) {
+        return transactionRepository.findByAccountNumberAndTransactionDate(startDate,endDate);
+    }
+
+//    @Override
+//    public List<TransactionsHistory> retrieveAllTransactions() {
+//        return transactionRepository.findByTransactionIdAndTransactionDateBetween()
+//    }
 
 
 

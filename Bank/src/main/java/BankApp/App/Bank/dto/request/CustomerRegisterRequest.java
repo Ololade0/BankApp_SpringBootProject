@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @ToString
 public class CustomerRegisterRequest {
-    public String customerId;
+    private String customerId;
     private String bankId;
     private String customerEmail;
     private String customerName;

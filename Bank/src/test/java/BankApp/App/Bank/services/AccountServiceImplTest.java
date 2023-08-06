@@ -5,6 +5,7 @@ import BankApp.App.Bank.dto.response.DepositFundResponse;
 import BankApp.App.Bank.dto.response.TransferFundResponse;
 import BankApp.App.Bank.dto.response.WithdrawalFundResponse;
 import BankApp.App.Bank.model.Account;
+import BankApp.App.Bank.model.TransactionsHistory;
 import BankApp.App.Bank.model.enums.AccountType;
 import BankApp.App.Bank.utils.Utils;
 
@@ -17,10 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AccountServiceImplTest {
@@ -202,6 +205,22 @@ class AccountServiceImplTest {
             BigDecimal balance = accountService.checkAccountBalance(savedAccount.getCurrentBalance(), savedAccount.getAccountNumber());
             assertEquals(BigDecimal.valueOf(10000), balance);
         }
+
+    @Test
+    void generateAccountStatement () {
+        GenerateStatementAccountRequest generateStatementAccountRequest = GenerateStatementAccountRequest.builder()
+                .startDate(LocalDate.of(2023,8,6))
+                .endDate(LocalDate.of(2023,8,6))
+                .build();
+        List<TransactionsHistory> allTransactions = accountService.generateStatmentOfAccount(savedAccount.getAccountNumber(),generateStatementAccountRequest.getStartDate(), generateStatementAccountRequest.getEndDate());
+        assertThat(allTransactions).isNotNull();
+    }
+
+//    List<TransactionsHistory> generateStatementOfAccount =    accountService.generateStatementContent(savedAccount.getAccountId());
+//        assertNotNull(generateStatementOfAccount);
+//        System.out.println(generateStatementOfAccount);
+//    }
+//
 
 
 
