@@ -109,11 +109,8 @@ class BankServiceImplTest {
 
     @Test
     public void testThatBankCanBeRegister() throws BankNameAlreadyExistException {
-
         BankRegisterRequest bankRegisterRequest = new BankRegisterRequest();
-
         savedBank = bankService.registerBank(bankRegisterRequest);
-
         assertEquals(2, bankService.size());
         assertThat(savedBank.getBankId()).isNotNull();
 

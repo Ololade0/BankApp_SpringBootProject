@@ -1,21 +1,17 @@
 package BankApp.App.Bank.controller;
-
 import BankApp.App.Bank.dto.request.*;
 import BankApp.App.Bank.dto.response.DepositFundResponse;
 import BankApp.App.Bank.dto.response.TransferFundResponse;
 import BankApp.App.Bank.dto.response.WithdrawalFundResponse;
 import BankApp.App.Bank.model.Account;
-import BankApp.App.Bank.model.TransactionsHistory;
 import BankApp.App.Bank.services.AccountService;
-
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor

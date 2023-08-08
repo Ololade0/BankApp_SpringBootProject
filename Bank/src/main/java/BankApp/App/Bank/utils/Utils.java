@@ -26,8 +26,7 @@ public class Utils {
         int maxDigits = 10 - prefix.length();
         int maxNumber = (int) Math.pow(10, maxDigits) - 1;
         int randomNumber = new Random().nextInt(maxNumber) + 1;
-        String number = prefix + String.format("%0" + maxDigits + "d", randomNumber);
-        return number;
+        return prefix + String.format("%0" + maxDigits + "d", randomNumber);
     }
 
     private int getPrefixForAccountType(AccountType accountType) {
